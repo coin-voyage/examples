@@ -59,12 +59,19 @@ export default function Summary() {
     } as Prices
   }, [selectedProduct])
 
-  const { data: payOrder, isLoading } = useQuery<PayOrder | null>({
+  const { data: payOrder, isLoading, error } = useQuery<PayOrder | null>({
     queryKey: ["create-pay-order", JSON.stringify({ valueUsd: prices.total, metadata })],
-    queryFn: async () => createPayOrder({
-      valueUsd: prices.total,
-      metadata
-    }),
+    queryFn: async () => {
+      const { data, error } = await createPayOrder({
+        valueUsd: prices.total,
+        metadata
+      })
+      if (error) {
+        throw new Error(JSON.stringify(error))
+      }
+
+      return data || null
+    },
     refetchOnMount: false,
     refetchOnWindowFocus: false
   });
@@ -75,7 +82,7 @@ export default function Summary() {
       selectedProduct={selectedProduct}
       setSelectedProduct={setSelectedProduct}
     >
-      <PayCrypto isLoading={isLoading} payId={payOrder?.id} />
+      <PayCrypto isLoading={isLoading} payId={payOrder?.id} error={error} />
     </OrderSummary>
   )
 }

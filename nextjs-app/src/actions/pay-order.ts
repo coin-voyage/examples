@@ -1,6 +1,6 @@
 'use server';
 
-import { ApiClient } from "@coin-voyage/paykit/server";
+import { ApiClient, type APIResponse } from "@coin-voyage/paykit/server";
 import { type PayOrder, type PayOrderMetadata } from "@coin-voyage/paykit/types";
 
 export interface PayOrderProps {
@@ -8,7 +8,7 @@ export interface PayOrderProps {
     metadata: PayOrderMetadata
 }
 
-export async function createPayOrder(props: Partial<PayOrderProps>): Promise<PayOrder | null> {
+export async function createPayOrder(props: Partial<PayOrderProps>): Promise<APIResponse<PayOrder>> {
     if (!props.valueUsd) {
         throw new Error('valueUsd is required')
     }
@@ -25,15 +25,8 @@ export async function createPayOrder(props: Partial<PayOrderProps>): Promise<Pay
 
     const signature = apiClient.generateAuthorizationSignature(process.env.COIN_VOYAGE_API_SECRET)
 
-    try {
-        const payOrder = await apiClient.createSalePayOrder({
-            destination_value_usd: props.valueUsd,
-            metadata: props.metadata
-        }, signature)
-
-        return payOrder || null
-    } catch (error) {
-        console.error('Failed to create pay order', error)
-        return null
-    }
+    return apiClient.createSalePayOrder({
+        destination_value_usd: props.valueUsd,
+        metadata: props.metadata
+    }, signature)
 }
