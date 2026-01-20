@@ -25,8 +25,27 @@ export async function createPayOrder(props: Partial<PayOrderProps>): Promise<API
 
     const signature = apiClient.generateAuthorizationSignature(process.env.COIN_VOYAGE_API_SECRET)
 
-    return apiClient.createSalePayOrder({
-        destination_value_usd: props.valueUsd,
-        metadata: props.metadata
-    }, signature)
+    try {
+        return apiClient.createSalePayOrder({
+            intent: {
+                amount: {
+                    fiat: {
+                        amount: props.valueUsd,
+                        unit: 'USD',
+                    }
+                }
+            },
+            metadata: props.metadata
+        }, signature)
+    } catch (error) {
+        console.error('Failed to create pay order', error)
+        return {
+            error: {
+                path: '/pay-orders',
+                status: 'Internal Server Error',
+                statusCode: 500,
+                message: 'Failed to create pay order'
+            }
+        }
+    }
 }

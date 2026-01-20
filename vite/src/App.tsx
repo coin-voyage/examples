@@ -3,7 +3,7 @@ import { ChainId } from "@coin-voyage/paykit/server";
 import { useState } from "react";
 
 export default function App() {
-  const [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState(0);
   const [account, setAccount] = useState("");
 
   return (
@@ -32,16 +32,7 @@ export default function App() {
                 placeholder="0.00"
                 value={amount}
                 onChange={(e) => {
-                  if (!e.target.value) return;
-                  const rawValue = e.target.value.trim();
-
-                  // Prevent entering invalid characters
-                  if (rawValue === "" || isNaN(Number(rawValue))) {
-                    setAmount("");
-                    return;
-                  }
-
-                  setAmount(parseFloat(rawValue).toString());
+                  setAmount(Number(e.target.value));
                 }}
               />
             </div>

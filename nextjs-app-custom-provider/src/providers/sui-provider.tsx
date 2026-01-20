@@ -11,7 +11,7 @@ export function SuiProvider({ children }: { children: React.ReactNode }) {
             }}
             defaultNetwork={"mainnet"}
         >
-            <WalletProvider storageKey="your-sui-provider" autoConnect={true}>{children}</WalletProvider>
+            <WalletProvider storageKey="your-sui-provider">{children}</WalletProvider>
         </SuiClientProvider>
     )
 }

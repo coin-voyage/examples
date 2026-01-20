@@ -6,7 +6,7 @@ import { useState } from "react"
 import { Sui } from "./icons"
 
 export default function DepositFunds() {
-  const [amount, setAmount] = useState("")
+  const [amount, setAmount] = useState(0)
   const [account, setAccount] = useState("")
 
   return (
@@ -26,15 +26,7 @@ export default function DepositFunds() {
             placeholder="0.00"
             value={amount}
             onChange={(e) => {
-              const rawValue = e.target.value.trim()
-
-              // Prevent entering invalid characters
-              if (rawValue === "" || isNaN(Number(rawValue))) {
-                setAmount("");
-                return;
-              }
-
-              setAmount(parseFloat(rawValue).toString());
+              setAmount(Number(e.target.value));
             }}
           />
         </div>

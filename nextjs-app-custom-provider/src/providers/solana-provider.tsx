@@ -12,7 +12,6 @@ export function SolanaProvider({ children }: { children: React.ReactNode }) {
         <ConnectionProvider endpoint={endpoint} >
             <WalletProvider
                 localStorageKey="your-solana-provider"
-                autoConnect={true}
                 wallets={[]}
             >
                 {children}

@@ -6,7 +6,7 @@ import { useState } from "react"
 import { Solana } from "./icons"
 
 export default function DepositFunds() {
-  const [amount, setAmount] = useState("")
+  const [amount, setAmount] = useState(0)
   const [account, setAccount] = useState("")
 
   return (
@@ -32,15 +32,7 @@ export default function DepositFunds() {
               placeholder="0.00"
               value={amount}
               onChange={(e) => {
-                const rawValue = e.target.value.trim()
-
-                // Prevent entering invalid characters
-                if (rawValue === "" || isNaN(Number(rawValue))) {
-                  setAmount("");
-                  return;
-                }
-
-                setAmount(parseFloat(rawValue).toString());
+                setAmount(Number(e.target.value));
               }}
             />
           </div>
@@ -75,15 +67,15 @@ export default function DepositFunds() {
           onPaymentCreationError={(event) => {
             console.error(event.errorMessage)
           }}
-          onPaymentBounced={(event) => {
+          onPaymentBounced={() => {
             console.error("Payment Bounced")
           }}
-          onPaymentStarted={(event) => {
+          onPaymentStarted={() => {
             console.log("Payment Pending", {
               description: "Your payment is being processed.",
             })
           }}
-          onPaymentCompleted={(event) => {
+          onPaymentCompleted={() => {
             console.log("Payment Completed", {
               description: "Your payment was successful.",
             })
