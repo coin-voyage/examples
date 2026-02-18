@@ -7,26 +7,17 @@ import { SolanaProvider } from "./solana-provider"
 import { SuiProvider } from "./sui-provider"
 
 const queryClient = new QueryClient()
+const environment =
+  process.env.NEXT_PUBLIC_COIN_VOYAGE_ENVIRONMENT ?? "production";
+const apiKey = process.env.NEXT_PUBLIC_COIN_VOYAGE_API_KEY || "";
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  if (!process.env.NEXT_PUBLIC_COIN_VOYAGE_API_KEY) {
-    throw new Error("NEXT_PUBLIC_COIN_VOYAGE_API_KEY is required")
-  }
-
   return (
     <QueryClientProvider client={queryClient}>
       <SuiProvider>
         <SolanaProvider>
-          <WalletProvider
-            config={{
-              evm: {
-                additionalConfigOptions: {
-                  ssr: true
-                }
-              }
-            }}
-          >
-            <PayKitProvider apiKey={process.env.NEXT_PUBLIC_COIN_VOYAGE_API_KEY}>
+          <WalletProvider>
+            <PayKitProvider apiKey={apiKey} environment={environment}>
               {children}
             </PayKitProvider>
           </WalletProvider>

@@ -63,15 +63,15 @@ export default function DepositFunds() {
         onPaymentCreationError={(event) => {
           console.error(event.errorMessage)
         }}
-        onPaymentBounced={(event) => {
+        onPaymentBounced={() => {
           console.error("Payment Bounced")
         }}
-        onPaymentStarted={(event) => {
+        onPaymentStarted={() => {
           console.log("Payment Pending", {
             description: "Your payment is being processed.",
           })
         }}
-        onPaymentCompleted={(event) => {
+        onPaymentCompleted={() => {
           console.log("Payment Completed", {
             description: "Your payment was successful.",
           })

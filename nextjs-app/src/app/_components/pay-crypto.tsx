@@ -30,7 +30,7 @@ export default function PayCrypto({
             }}
 
             children={
-                ({ show, hide }) => (
+                ({ show }) => (
                     <>
                         <button
                             onClick={show}

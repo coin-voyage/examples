@@ -1,18 +1,18 @@
-'use client'
+"use client";
 
-import { PayOrder, PayOrderMetadata } from "@coin-voyage/paykit/types"
-import { useQuery } from "@tanstack/react-query"
-import { ChevronDown, Trash } from "lucide-react"
-import React, { PropsWithChildren, useMemo } from "react"
-import { createPayOrder } from "../../actions/pay-order"
-import PayCrypto from "./pay-crypto"
+import { PayOrder, PayOrderMetadata } from "@coin-voyage/paykit/types";
+import { useQuery } from "@tanstack/react-query";
+import { ChevronDown, Trash } from "lucide-react";
+import React, { PropsWithChildren, useMemo } from "react";
+import { createPayOrder } from "../../actions/pay-order";
+import PayCrypto from "./pay-crypto";
 
 type Prices = {
-  subtotal: number
-  taxes?: number
-  shipping?: number
-  total: number
-}
+  subtotal: number;
+  taxes?: number;
+  shipping?: number;
+  total: number;
+};
 
 const products = [
   {
@@ -27,53 +27,62 @@ const products = [
     imageAlt: "Front of men's Basic Tee in black.",
   },
   // More products...
-]
+];
 
 export default function Summary() {
   const [selectedProduct, setSelectedProduct] = React.useState({
     product: products[0],
     amount: 1,
-  })
+  });
 
   const metadata: PayOrderMetadata = {
     items: [
       {
         name: selectedProduct.product.title,
-        currency: "USD",
         description: `${selectedProduct.product.title} (${selectedProduct.product.color}), size: ${selectedProduct.product.size}`,
         image: selectedProduct.product.imageSrc,
         unit_price: selectedProduct.product.price,
         quantity: selectedProduct.amount,
-      }]
-  }
+      },
+    ],
+  };
 
   const prices = useMemo(() => {
-    const subtotal = Number(products.find((p) => p.id === selectedProduct.product.id)?.price) * selectedProduct.amount;
+    const subtotal =
+      Number(products.find((p) => p.id === selectedProduct.product.id)?.price) *
+      selectedProduct.amount;
     const taxes = subtotal * 0.05;
     const shipping = 5;
     return {
       subtotal,
       taxes,
       shipping,
-      total: subtotal + taxes + shipping
-    } as Prices
-  }, [selectedProduct])
+      total: subtotal + taxes + shipping,
+    } as Prices;
+  }, [selectedProduct]);
 
-  const { data: payOrder, isLoading, error } = useQuery<PayOrder | null>({
-    queryKey: ["create-pay-order", JSON.stringify({ valueUsd: prices.total, metadata })],
+  const {
+    data: payOrder,
+    isLoading,
+    error,
+  } = useQuery<PayOrder | null>({
+    queryKey: [
+      "create-pay-order",
+      JSON.stringify({ valueUsd: prices.total, metadata }),
+    ],
     queryFn: async () => {
       const { data, error } = await createPayOrder({
         valueUsd: prices.total,
-        metadata
-      })
+        metadata,
+      });
       if (error) {
-        throw new Error(JSON.stringify(error))
+        throw new Error(JSON.stringify(error));
       }
 
-      return data || null
+      return data || null;
     },
     refetchOnMount: false,
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
   });
 
   return (
@@ -84,7 +93,7 @@ export default function Summary() {
     >
       <PayCrypto isLoading={isLoading} payId={payOrder?.id} error={error} />
     </OrderSummary>
-  )
+  );
 }
 
 function OrderSummary({
@@ -93,9 +102,11 @@ function OrderSummary({
   setSelectedProduct,
   children,
 }: PropsWithChildren<{
-  prices: Prices
-  selectedProduct: { product: typeof products[0]; amount: number },
-  setSelectedProduct: React.Dispatch<React.SetStateAction<{ product: typeof products[0]; amount: number }>>
+  prices: Prices;
+  selectedProduct: { product: (typeof products)[0]; amount: number };
+  setSelectedProduct: React.Dispatch<
+    React.SetStateAction<{ product: (typeof products)[0]; amount: number }>
+  >;
 }>) {
   return (
     <div className="mt-10 lg:mt-0">
@@ -128,9 +139,7 @@ function OrderSummary({
                     <p className="mt-1 text-sm text-gray-500">
                       {product.color}
                     </p>
-                    <p className="mt-1 text-sm text-gray-500">
-                      {product.size}
-                    </p>
+                    <p className="mt-1 text-sm text-gray-500">{product.size}</p>
                   </div>
 
                   <div className="ml-4 flow-root shrink-0">
@@ -159,7 +168,7 @@ function OrderSummary({
                           setSelectedProduct({
                             product,
                             amount: Number.parseInt(e.target.value),
-                          })
+                          });
                         }}
                         aria-label="Quantity"
                         className="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-2 pl-3 pr-8 text-base outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
@@ -190,34 +199,38 @@ function OrderSummary({
             <dd className="text-sm font-medium">
               {new Intl.NumberFormat("en-US", {
                 style: "currency",
-                currency: "USD"
+                currency: "USD",
               }).format(prices.subtotal)}
             </dd>
           </div>
-          {prices.shipping && <div className="flex items-center justify-between">
-            <dt className="text-sm">Shipping</dt>
-            <dd className="text-sm font-medium">
-              {new Intl.NumberFormat("en-US", {
-                style: "currency",
-                currency: "USD"
-              }).format(prices.shipping)}
-            </dd>
-          </div>}
-          {prices.taxes && <div className="flex items-center justify-between">
-            <dt className="text-sm">Taxes</dt>
-            <dd className="text-sm font-medium">
-              {new Intl.NumberFormat("en-US", {
-                style: "currency",
-                currency: "USD"
-              }).format(prices.taxes)}
-            </dd>
-          </div>}
+          {prices.shipping && (
+            <div className="flex items-center justify-between">
+              <dt className="text-sm">Shipping</dt>
+              <dd className="text-sm font-medium">
+                {new Intl.NumberFormat("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                }).format(prices.shipping)}
+              </dd>
+            </div>
+          )}
+          {prices.taxes && (
+            <div className="flex items-center justify-between">
+              <dt className="text-sm">Taxes</dt>
+              <dd className="text-sm font-medium">
+                {new Intl.NumberFormat("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                }).format(prices.taxes)}
+              </dd>
+            </div>
+          )}
           <div className="flex items-center justify-between border-t border-gray-200 pt-6">
             <dt className="text-base font-medium">Total</dt>
             <dd className="text-base font-medium">
               {new Intl.NumberFormat("en-US", {
                 style: "currency",
-                currency: "USD"
+                currency: "USD",
               }).format(prices.total)}
             </dd>
           </div>
@@ -228,6 +241,5 @@ function OrderSummary({
         </div>
       </div>
     </div>
-  )
+  );
 }
-
