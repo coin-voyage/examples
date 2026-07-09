@@ -1,18 +1,23 @@
-"use client"
+"use client";
 
-import { PayButton } from "@coin-voyage/paykit"
-import { ChainId } from "@coin-voyage/paykit/server"
-import { useState } from "react"
-import { Sui } from "./icons"
+import { PayButton } from "@coin-voyage/paykit";
+import { ChainId } from "@coin-voyage/paykit/server";
+import { useState } from "react";
+import { Sui } from "./icons";
 
 export default function DepositFunds() {
-  const [amount, setAmount] = useState(0)
-  const [account, setAccount] = useState("")
+  const [amount, setAmount] = useState(0);
+  const [account, setAccount] = useState("");
 
   return (
     <>
       <div>
-        <label htmlFor="amount" className="block text-sm/6 font-medium text-gray-700">Amount</label>
+        <label
+          htmlFor="amount"
+          className="block text-sm/6 font-medium text-gray-700"
+        >
+          Amount
+        </label>
         <div className="relative mt-2">
           <div className="absolute right-3 top-1/2 -translate-y-1/2">
             <Sui height={20} width={20} />
@@ -33,7 +38,12 @@ export default function DepositFunds() {
       </div>
 
       <div>
-        <label htmlFor="account" className="block text-sm/6 font-medium text-gray-700">SUI Account</label>
+        <label
+          htmlFor="account"
+          className="block text-sm/6 font-medium text-gray-700"
+        >
+          SUI Account
+        </label>
         <input
           id="account"
           name="account"
@@ -41,7 +51,7 @@ export default function DepositFunds() {
           placeholder="0x..."
           value={account}
           onChange={(e) => {
-            setAccount(e.target.value)
+            setAccount(e.target.value);
           }}
         />
       </div>
@@ -49,35 +59,28 @@ export default function DepositFunds() {
       <PayButton
         intent="Deposit"
         toAddress={account}
-        toAmount={amount} 
+        toAmount={amount}
         toToken={undefined}
         toChain={ChainId.SUI}
         disabled={!amount || !account}
-
         mode="dark"
         style={{
           width: "100%",
           borderRadius: "0.375rem",
         }}
-
-        onPaymentCreationError={(event) => {
-          console.error(event.errorMessage)
+        onAwaitingPayment={(event) => {
+          console.log("Awaiting payment", event);
         }}
-        onPaymentBounced={() => {
-          console.error("Payment Bounced")
+        onConfirmingPayment={(event) => {
+          console.log("Confirming payment", event);
         }}
-        onPaymentStarted={() => {
-          console.log("Payment Pending", {
-            description: "Your payment is being processed.",
-          })
+        onExecutingPayment={(event) => {
+          console.log("Executing payment", event);
         }}
-        onPaymentCompleted={() => {
-          console.log("Payment Completed", {
-            description: "Your payment was successful.",
-          })
+        onPaymentCompleted={(event) => {
+          console.log("Payment completed", event);
         }}
       />
     </>
-  )
+  );
 }
-

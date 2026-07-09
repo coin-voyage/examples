@@ -5,7 +5,7 @@ import {
     WalletProvider
 } from "@solana/wallet-adapter-react"
 
-const endpoint = "https://api.mainnet-beta.solana.com"
+const endpoint = "my-solana-endpoint" // Replace with your Solana endpoint
 
 export function SolanaProvider({ children }: { children: React.ReactNode }) {
     return (

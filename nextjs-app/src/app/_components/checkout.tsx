@@ -1,10 +1,10 @@
 "use client";
 
-import { PayOrder, PayOrderMetadata } from "@coin-voyage/paykit/types";
+import type { Order, OrderMetadata } from "@coin-voyage/paykit/types";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronDown, Trash } from "lucide-react";
 import React, { PropsWithChildren, useMemo } from "react";
-import { createPayOrder } from "../../actions/pay-order";
+import { createOrder } from "../../actions/order";
 import PayCrypto from "./pay-crypto";
 
 type Prices = {
@@ -35,7 +35,7 @@ export default function Summary() {
     amount: 1,
   });
 
-  const metadata: PayOrderMetadata = {
+  const metadata: OrderMetadata = {
     items: [
       {
         name: selectedProduct.product.title,
@@ -65,13 +65,13 @@ export default function Summary() {
     data: payOrder,
     isLoading,
     error,
-  } = useQuery<PayOrder | null>({
+  } = useQuery<Order | null>({
     queryKey: [
       "create-pay-order",
       JSON.stringify({ valueUsd: prices.total, metadata }),
     ],
     queryFn: async () => {
-      const { data, error } = await createPayOrder({
+      const { data, error } = await createOrder({
         valueUsd: prices.total,
         metadata,
       });
@@ -91,7 +91,7 @@ export default function Summary() {
       selectedProduct={selectedProduct}
       setSelectedProduct={setSelectedProduct}
     >
-      <PayCrypto isLoading={isLoading} payId={payOrder?.id} error={error} />
+      <PayCrypto isLoading={isLoading} orderId={payOrder?.id} error={error} />
     </OrderSummary>
   );
 }

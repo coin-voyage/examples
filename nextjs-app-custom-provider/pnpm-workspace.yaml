@@ -1,0 +1,9 @@
+allowBuilds:
+  bigint-buffer: set this to true or false
+  bufferutil: set this to true or false
+  secp256k1: set this to true or false
+  sharp: set this to true or false
+  utf-8-validate: set this to true or false
+minimumReleaseAgeExclude:
+  - '@coin-voyage/paykit@3.2.2'
+  - '@coin-voyage/shared@3.1.2'

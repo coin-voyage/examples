@@ -2,18 +2,19 @@
 
 import { ApiClient, type APIResponse } from "@coin-voyage/paykit/server";
 import {
-  type PayOrder,
-  type PayOrderMetadata,
+  APIEnvironment,
+  type Order,
+  type OrderMetadata,
 } from "@coin-voyage/paykit/types";
 
-export interface PayOrderProps {
+export interface OrderProps {
   valueUsd: number;
-  metadata: PayOrderMetadata;
+  metadata: OrderMetadata;
 }
 
-export async function createPayOrder(
-  props: Partial<PayOrderProps>,
-): Promise<APIResponse<PayOrder>> {
+export async function createOrder(
+  props: Partial<OrderProps>,
+): Promise<APIResponse<Order>> {
   if (!props.valueUsd) {
     throw new Error("valueUsd is required");
   }
@@ -25,22 +26,17 @@ export async function createPayOrder(
     throw new Error("API key and secret are required");
   }
 
+  const environment = (process.env.NEXT_PUBLIC_COIN_VOYAGE_ENVIRONMENT ??
+    "production") as APIEnvironment;
   const apiClient = ApiClient({
     apiKey: process.env.NEXT_PUBLIC_COIN_VOYAGE_API_KEY,
-    environment:
-      process.env.NEXT_PUBLIC_COIN_VOYAGE_ENVIRONMENT ?? "production",
+    environment,
   });
 
-  return apiClient.createSalePayOrder(
+  return apiClient.createSaleOrder(
     {
-      intent: {
-        amount: {
-          fiat: {
-            amount: props.valueUsd,
-            unit: "USD",
-          },
-        },
-      },
+      amount: props.valueUsd.toString(),
+      fiat_unit: "USD",
       metadata: props.metadata,
     },
     process.env.COIN_VOYAGE_API_SECRET,

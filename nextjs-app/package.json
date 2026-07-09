@@ -8,10 +8,10 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@coin-voyage/paykit": "^2.2.6",
+    "@coin-voyage/paykit": "3.2.2",
     "@tanstack/react-query": ">=5.90.6",
     "lucide-react": "0.469.0",
-    "next": "14.2.26",
+    "next": "16.2.6",
     "react": "18.3.1",
     "react-dom": "18.3.1"
   },
